@@ -2,11 +2,13 @@
 <html lang="th">
 
 <head>
+
   <meta charset="UTF-8">
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Water Quality Monitor</title>
+
 
   <style>
 
@@ -14,154 +16,267 @@
       box-sizing: border-box;
     }
 
+
     body {
+
       font-family: Arial, sans-serif;
+
       margin: 0;
+
       padding: 20px;
+
       background: #f3f8fc;
+
       color: #17324d;
+
     }
+
 
     .container {
+
       max-width: 900px;
+
       margin: auto;
+
     }
+
 
     h1 {
+
       text-align: center;
+
       margin-bottom: 20px;
+
     }
+
 
     .connection {
+
       text-align: center;
+
       padding: 12px;
+
       margin-bottom: 20px;
+
       background: white;
+
       border-radius: 12px;
+
       font-weight: bold;
+
     }
+
 
     .grid {
+
       display: grid;
-      grid-template-columns: repeat(
-        auto-fit,
-        minmax(200px, 1fr)
-      );
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(200px, 1fr)
+        );
 
       gap: 15px;
+
     }
 
+
     .card {
+
       background: white;
+
       border-radius: 15px;
+
       padding: 20px;
+
       text-align: center;
 
       box-shadow:
-        0 3px 10px rgba(0, 0, 0, 0.08);
+        0 3px 10px
+        rgba(0, 0, 0, 0.08);
+
     }
+
 
     .card h2 {
+
       margin-top: 0;
+
       font-size: 20px;
+
     }
+
 
     .value {
+
       font-size: 36px;
+
       font-weight: bold;
+
       margin: 15px 0;
+
     }
+
 
     .unit {
+
       font-size: 16px;
+
       color: #666;
+
     }
+
 
     .status {
+
       display: inline-block;
+
       padding: 7px 16px;
+
       border-radius: 20px;
+
       font-weight: bold;
+
       margin-top: 8px;
+
     }
+
 
     .low {
+
       background: #ffe0e0;
+
       color: #b00020;
+
     }
+
 
     .normal {
+
       background: #e0f5e8;
+
       color: #16723a;
+
     }
+
 
     .high {
+
       background: #fff0cc;
+
       color: #9a6200;
+
     }
+
 
     .pump-on {
+
       background: #dff7e5;
+
       color: #08752b;
+
     }
+
 
     .pump-off {
+
       background: #eeeeee;
+
       color: #555555;
+
     }
+
 
     .auto-card {
+
       margin-top: 20px;
+
     }
 
-    .auto-card h2 {
-      color: #17324d;
-    }
 
     .rule {
+
       font-size: 18px;
+
       margin: 10px 0;
+
     }
 
+
+    .condition {
+
+      margin: 15px 0;
+
+      padding: 12px;
+
+      background: #f7fafc;
+
+      border-radius: 10px;
+
+      text-align: left;
+
+    }
+
+
     button {
+
       border: none;
+
       border-radius: 10px;
 
       padding: 12px 20px;
 
       font-size: 16px;
+
       font-weight: bold;
 
       cursor: pointer;
 
       margin: 5px;
+
     }
+
 
     .btn-on {
+
       background: #28a745;
+
       color: white;
+
     }
+
 
     .btn-off {
+
       background: #dc3545;
+
       color: white;
+
     }
+
 
     button:hover {
+
       opacity: 0.85;
+
     }
+
 
     .updated {
+
       margin-top: 20px;
+
       text-align: center;
+
       padding: 12px;
+
       background: white;
+
       border-radius: 12px;
+
     }
 
-    .error {
-      color: #b00020;
-    }
 
   </style>
 
@@ -170,18 +285,24 @@
 
 <body>
 
+
 <div class="container">
 
-  <h1>💧 Water Quality Monitor</h1>
+
+  <h1>
+    💧 Water Quality Monitor
+  </h1>
 
 
-  <!-- Firebase Connection Status -->
+  <!-- Firebase Connection -->
 
   <div
     id="connection"
     class="connection"
   >
+
     กำลังเชื่อมต่อ Firebase...
+
   </div>
 
 
@@ -194,7 +315,9 @@
 
     <div class="card">
 
-      <h2>🌡️ อุณหภูมิน้ำ</h2>
+      <h2>
+        🌡️ อุณหภูมิน้ำ
+      </h2>
 
       <div
         id="temperature"
@@ -214,7 +337,9 @@
 
     <div class="card">
 
-      <h2>💧 ระดับน้ำ</h2>
+      <h2>
+        💧 ระดับน้ำ
+      </h2>
 
       <div
         id="waterLevel"
@@ -241,7 +366,9 @@
 
     <div class="card">
 
-      <h2>🧪 ค่า pH</h2>
+      <h2>
+        🧪 ค่า pH
+      </h2>
 
       <div
         id="ph"
@@ -264,7 +391,9 @@
 
     <div class="card">
 
-      <h2>⚙️ ปั๊มน้ำ</h2>
+      <h2>
+        ⚙️ ปั๊มน้ำ
+      </h2>
 
       <div
         id="pump"
@@ -289,14 +418,60 @@
 
   <div class="card auto-card">
 
-    <h2>🔄 ระบบควบคุมปั๊มอัตโนมัติ</h2>
 
-    <p class="rule">
-      💧 ระดับน้ำ ≤ 30% → 🔴 <b>Pump OFF</b>
+    <h2>
+      🔄 ระบบควบคุมปั๊มอัตโนมัติ
+    </h2>
+
+
+    <p>
+      ปั๊มจะทำงานเมื่อ
+      <b>ครบทุกเงื่อนไข</b>
     </p>
 
+
+    <div class="condition">
+
+      💧 ระดับน้ำ
+      <b>&gt; 30%</b>
+
+    </div>
+
+
+    <div class="condition">
+
+      🧪 ค่า pH
+      <b>4.5 – 6.5</b>
+
+    </div>
+
+
+    <div class="condition">
+
+      🌡️ อุณหภูมิ
+      <b>&lt; 50°C</b>
+
+    </div>
+
+
+    <hr>
+
+
     <p class="rule">
-      💧 ระดับน้ำ &gt; 30% → 🟢 <b>Pump ON</b>
+
+      ✅ ครบทุกเงื่อนไข
+      →
+      <b>Pump ON</b>
+
+    </p>
+
+
+    <p class="rule">
+
+      ❌ ไม่ครบเงื่อนไข
+      →
+      <b>Pump OFF</b>
+
     </p>
 
 
@@ -307,45 +482,57 @@
       ควบคุมปั๊มด้วยตนเอง
     </h3>
 
+
     <button
       class="btn-on"
       onclick="setPump(true)"
     >
+
       🟢 สั่งเปิดปั๊ม
+
     </button>
+
 
     <button
       class="btn-off"
       onclick="setPump(false)"
     >
+
       🔴 สั่งปิดปั๊ม
+
     </button>
+
 
   </div>
 
 
-  <!-- Last Updated -->
+  <!-- Updated -->
 
   <div class="updated">
 
     อัปเดตล่าสุด:
+
     <span id="updated">
       --
     </span>
 
   </div>
 
+
 </div>
 
 
-<!-- Firebase -->
+
+<!-- ======================================
+     FIREBASE
+====================================== -->
 
 <script type="module">
 
 
-  // ========================================
+  // ======================================
   // Firebase Libraries
-  // ========================================
+  // ======================================
 
   import {
     initializeApp
@@ -364,9 +551,9 @@
   "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
 
 
-  // ========================================
+  // ======================================
   // Firebase Configuration
-  // ========================================
+  // ======================================
 
   const firebaseConfig = {
 
@@ -397,9 +584,9 @@
   };
 
 
-  // ========================================
-  // Start Firebase
-  // ========================================
+  // ======================================
+  // Initialize Firebase
+  // ======================================
 
   const app =
     initializeApp(firebaseConfig);
@@ -409,72 +596,152 @@
     getDatabase(app);
 
 
-  // Firebase Root
-
   const rootRef =
     ref(db);
 
 
-  // ========================================
-  // Auto Pump Function
-  // ========================================
+
+  // ======================================
+  // AUTO PUMP
+  // ======================================
 
   async function autoPump(
+
     waterLevel,
+
+    ph,
+
+    temperature,
+
     currentPump
+
   ) {
 
-    // ตรวจสอบค่าระดับน้ำ
+
+    // ====================================
+    // ตรวจสอบ Sensor
+    // ====================================
 
     if (
-      !Number.isFinite(waterLevel)
+
+      !Number.isFinite(waterLevel) ||
+
+      !Number.isFinite(ph) ||
+
+      !Number.isFinite(temperature)
+
     ) {
 
       console.log(
-        "Water Level Error"
+        "Sensor Error → Pump OFF"
       );
+
+
+      if (currentPump === true) {
+
+        try {
+
+          await set(
+            ref(db, "pump"),
+            false
+          );
+
+          await set(
+            ref(db, "updated"),
+            Date.now()
+          );
+
+        }
+
+        catch (error) {
+
+          console.error(
+            "Pump OFF Error:",
+            error
+          );
+
+        }
+
+      }
+
 
       return;
-    }
-
-
-    // ======================================
-    // AUTO PUMP LOGIC
-    // ======================================
-
-    let desiredPump;
-
-
-    if (waterLevel <= 30) {
-
-      // ระดับน้ำ <= 30%
-      // Pump OFF
-
-      desiredPump = false;
-
-      console.log(
-        "Water Level <= 30% → Pump OFF"
-      );
-
-    }
-
-    else {
-
-      // ระดับน้ำ > 30%
-      // Pump ON
-
-      desiredPump = true;
-
-      console.log(
-        "Water Level > 30% → Pump ON"
-      );
 
     }
 
 
-    // ======================================
-    // ตรวจสอบว่าต้องเปลี่ยนสถานะหรือไม่
-    // ======================================
+
+    // ====================================
+    // เงื่อนไขที่ 1
+    // ระดับน้ำ > 30%
+    // ====================================
+
+    const waterCondition =
+      waterLevel > 30;
+
+
+
+    // ====================================
+    // เงื่อนไขที่ 2
+    // pH 4.5 - 6.5
+    // ====================================
+
+    const phCondition =
+      ph >= 4.5 &&
+      ph <= 6.5;
+
+
+
+    // ====================================
+    // เงื่อนไขที่ 3
+    // อุณหภูมิ < 50°C
+    // ====================================
+
+    const temperatureCondition =
+      temperature < 50;
+
+
+
+    // ====================================
+    // ตัดสินใจเปิด/ปิดปั๊ม
+    // ====================================
+
+    const desiredPump =
+
+      waterCondition &&
+
+      phCondition &&
+
+      temperatureCondition;
+
+
+
+    // ====================================
+    // แสดงข้อมูล Console
+    // ====================================
+
+    console.log(
+      "Water Level:",
+      waterLevel + "%",
+
+      "| pH:",
+      ph,
+
+      "| Temperature:",
+      temperature + "°C",
+
+      "| Pump:",
+      desiredPump
+        ? "ON"
+        : "OFF"
+    );
+
+
+
+    // ====================================
+    // ถ้าสถานะเหมือนเดิม
+    // ไม่ต้องส่ง Firebase ซ้ำ
+    // ====================================
 
     if (
       currentPump === desiredPump
@@ -485,9 +752,10 @@
     }
 
 
-    // ======================================
-    // ส่งคำสั่งไป Firebase
-    // ======================================
+
+    // ====================================
+    // ส่งคำสั่ง Pump ไป Firebase
+    // ====================================
 
     try {
 
@@ -504,7 +772,7 @@
 
 
       console.log(
-        "Pump =",
+        "Auto Pump →",
         desiredPump
           ? "ON"
           : "OFF"
@@ -524,13 +792,15 @@
   }
 
 
-  // ========================================
+
+  // ======================================
   // Water Level Status
-  // ========================================
+  // ======================================
 
   function updateLevelStatus(
     level
   ) {
+
 
     const element =
       document.getElementById(
@@ -561,13 +831,15 @@
   }
 
 
-  // ========================================
+
+  // ======================================
   // pH Status
-  // ========================================
+  // ======================================
 
   function updatePhStatus(
     ph
   ) {
+
 
     const element =
       document.getElementById(
@@ -575,45 +847,48 @@
       );
 
 
-    if (ph < 6.5) {
+    if (ph < 4.5) {
 
       element.textContent =
-        "ACIDIC";
+        "pH ต่ำเกินไป";
 
       element.className =
         "status low";
 
     }
 
-    else if (ph > 8.5) {
+    else if (ph <= 6.5) {
 
       element.textContent =
-        "ALKALINE";
-
-      element.className =
-        "status high";
-
-    }
-
-    else {
-
-      element.textContent =
-        "NORMAL";
+        "เหมาะสมสำหรับระบบ";
 
       element.className =
         "status normal";
 
     }
 
+    else {
+
+      element.textContent =
+        "pH สูงเกินช่วง";
+
+      element.className =
+        "status high";
+
+    }
+
   }
 
 
-  // ========================================
+
+  // ======================================
   // Firebase Real-Time Listener
-  // ========================================
+  // ======================================
 
   onValue(
+
     rootRef,
+
 
     (snapshot) => {
 
@@ -622,9 +897,10 @@
         snapshot.val() || {};
 
 
-      // ====================================
-      // Read Firebase Values
-      // ====================================
+
+      // ==================================
+      // อ่านค่าจาก Firebase
+      // ==================================
 
       const temperature =
         Number(
@@ -650,9 +926,10 @@
         );
 
 
-      // ====================================
-      // Temperature Display
-      // ====================================
+
+      // ==================================
+      // Temperature
+      // ==================================
 
       document.getElementById(
         "temperature"
@@ -667,9 +944,10 @@
         : "--";
 
 
-      // ====================================
-      // Water Level Display
-      // ====================================
+
+      // ==================================
+      // Water Level
+      // ==================================
 
       document.getElementById(
         "waterLevel"
@@ -684,9 +962,10 @@
         : "--";
 
 
-      // ====================================
-      // pH Display
-      // ====================================
+
+      // ==================================
+      // pH
+      // ==================================
 
       document.getElementById(
         "ph"
@@ -701,9 +980,10 @@
         : "--";
 
 
-      // ====================================
+
+      // ==================================
       // Water Level Status
-      // ====================================
+      // ==================================
 
       if (
         Number.isFinite(
@@ -718,9 +998,10 @@
       }
 
 
-      // ====================================
+
+      // ==================================
       // pH Status
-      // ====================================
+      // ==================================
 
       if (
         Number.isFinite(
@@ -735,9 +1016,10 @@
       }
 
 
-      // ====================================
+
+      // ==================================
       // Pump Display
-      // ====================================
+      // ==================================
 
       const pumpElement =
         document.getElementById(
@@ -778,9 +1060,10 @@
       }
 
 
-      // ====================================
+
+      // ==================================
       // Firebase Connection
-      // ====================================
+      // ==================================
 
       const connection =
         document.getElementById(
@@ -796,9 +1079,10 @@
         "#08752b";
 
 
-      // ====================================
+
+      // ==================================
       // Updated Time
-      // ====================================
+      // ==================================
 
       const updated =
         document.getElementById(
@@ -809,6 +1093,7 @@
       if (data.updated) {
 
         updated.textContent =
+
           new Date(
             data.updated
           ).toLocaleString(
@@ -825,19 +1110,31 @@
       }
 
 
-      // ====================================
+
+      // ==================================
       // AUTO PUMP
-      // ====================================
+      // ==================================
 
       if (
-        Number.isFinite(
-          waterLevel
-        )
+
+        Number.isFinite(waterLevel) &&
+
+        Number.isFinite(ph) &&
+
+        Number.isFinite(temperature)
+
       ) {
 
         autoPump(
+
           waterLevel,
+
+          ph,
+
+          temperature,
+
           pump
+
         );
 
       }
@@ -845,11 +1142,12 @@
     },
 
 
-    // ======================================
+    // ====================================
     // Firebase Error
-    // ======================================
+    // ====================================
 
     (error) => {
+
 
       console.error(
         error
@@ -874,41 +1172,64 @@
   );
 
 
-  // ========================================
+
+  // ======================================
   // Manual Pump Control
-  // ========================================
+  // ======================================
 
   window.setPump =
     async function(state) {
 
+
       try {
 
+
         await set(
-          ref(db, "pump"),
+
+          ref(
+            db,
+            "pump"
+          ),
+
           state
+
         );
 
 
         await set(
-          ref(db, "updated"),
+
+          ref(
+            db,
+            "updated"
+          ),
+
           Date.now()
+
         );
 
 
         console.log(
+
           "Manual Pump:",
+
           state
             ? "ON"
             : "OFF"
+
         );
+
 
       }
 
       catch (error) {
 
+
         console.error(
+
           "Manual Pump Error:",
+
           error
+
         );
 
 
@@ -922,6 +1243,7 @@
 
 
 </script>
+
 
 </body>
 
