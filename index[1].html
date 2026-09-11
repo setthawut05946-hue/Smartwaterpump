@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Water Quality Monitor</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,"Noto Sans Thai",sans-serif;background:#f4f7fb;color:#172033}
+.container{max-width:1100px;margin:auto;padding:22px}
+header{background:linear-gradient(135deg,#0b7285,#1971c2);color:white;border-radius:22px;padding:26px;margin-bottom:20px;box-shadow:0 10px 25px #0001}
+header h1{margin:0 0 7px;font-size:28px}
+header p{margin:0;opacity:.9}
+.status{display:inline-flex;align-items:center;gap:8px;background:#ffffff22;padding:8px 12px;border-radius:999px;margin-top:15px;font-size:14px}
+.dot{width:9px;height:9px;border-radius:50%;background:#69db7c}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.card{background:white;border-radius:18px;padding:20px;box-shadow:0 6px 18px #0000000b}
+.label{font-size:14px;color:#687386;margin-bottom:10px}
+.value{font-size:32px;font-weight:700}
+.unit{font-size:15px;color:#687386}
+.badge{display:inline-block;margin-top:12px;padding:6px 10px;border-radius:999px;font-size:13px;font-weight:700}
+.normal{background:#d3f9d8;color:#2b8a3e}
+.low,.acidic{background:#fff3bf;color:#a07900}
+.high,.alkaline{background:#ffe3e3;color:#c92a2a}
+.error{background:#ffe3e3;color:#c92a2a}
+.section{margin-top:20px}
+.panel{background:white;border-radius:18px;padding:20px;box-shadow:0 6px 18px #0000000b}
+.panel h2{margin:0 0 15px;font-size:19px}
+.row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid #edf0f5}
+.row:last-child{border-bottom:0}
+.pump{font-size:24px;font-weight:700}
+button{border:0;border-radius:12px;padding:11px 16px;font-weight:700;cursor:pointer;background:#1971c2;color:white}
+button.off{background:#868e96}
+.note{margin-top:18px;font-size:13px;color:#687386;line-height:1.6}
+footer{text-align:center;color:#8b95a7;font-size:12px;margin:22px}
+@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.container{padding:12px}.grid{grid-template-columns:1fr}header h1{font-size:23px}.value{font-size:29px}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>💧 Water Quality Monitor</h1>
+  <p>ระบบตรวจวัดและจัดการคุณภาพน้ำ</p>
+  <div class="status"><span class="dot"></span><span id="connection">Demo / ยังไม่ได้เชื่อม Arduino</span></div>
+</header>
+
+<div class="grid">
+  <div class="card">
+    <div class="label">🌡 อุณหภูมิน้ำ</div>
+    <div class="value"><span id="temp">28.50</span> <span class="unit">°C</span></div>
+    <span class="badge normal">NORMAL</span>
+  </div>
+  <div class="card">
+    <div class="label">💧 ระดับน้ำ</div>
+    <div class="value"><span id="level">65</span> <span class="unit">%</span></div>
+    <span id="levelStatus" class="badge normal">NORMAL</span>
+  </div>
+  <div class="card">
+    <div class="label">🧪 ค่า pH</div>
+    <div class="value"><span id="ph">7.12</span></div>
+    <span id="phStatus" class="badge normal">NORMAL</span>
+  </div>
+  <div class="card">
+    <div class="label">⚙️ ปั๊มน้ำ</div>
+    <div class="pump" id="pump">OFF</div>
+    <span id="pumpBadge" class="badge normal">พร้อมทำงาน</span>
+  </div>
+</div>
+
+<div class="section">
+<div class="panel">
+  <h2>📊 สถานะระบบ</h2>
+  <div class="row"><span>การเชื่อมต่อ Arduino</span><strong id="arduino">ยังไม่ได้เชื่อมต่อ</strong></div>
+  <div class="row"><span>ESP8266 / Wi-Fi</span><strong id="wifi">ยังไม่ได้เชื่อมต่อ</strong></div>
+  <div class="row"><span>อัปเดตล่าสุด</span><strong id="updated">--:--:--</strong></div>
+  <div class="row"><span>โหมดปั๊ม</span><strong>อัตโนมัติ</strong></div>
+</div>
+</div>
+
+<div class="section">
+<div class="panel">
+  <h2>🎛 ทดสอบหน้าเว็บ</h2>
+  <button id="pumpBtn" onclick="togglePump()">เปิดปั๊ม</button>
+  <div class="note">
+    ตอนนี้หน้านี้เป็น Demo เพื่อออกแบบเว็บก่อน ข้อมูลยังไม่ได้มาจาก Arduino จริง
+    เมื่อทำระบบ Internet เสร็จ จะเปลี่ยน JavaScript ส่วนรับข้อมูลให้รับค่าจาก ESP8266/API ได้
+  </div>
+</div>
+</div>
+
+<footer>Water Quality Monitoring System • Arduino Mega 2560 + ESP8266</footer>
+</div>
+
+<script>
+let pumpOn = false;
+
+function updateTime(){
+  document.getElementById("updated").textContent =
+    new Date().toLocaleTimeString("th-TH");
+}
+function togglePump(){
+  pumpOn = !pumpOn;
+  document.getElementById("pump").textContent = pumpOn ? "ON" : "OFF";
+  const btn = document.getElementById("pumpBtn");
+  btn.textContent = pumpOn ? "ปิดปั๊ม" : "เปิดปั๊ม";
+  btn.className = pumpOn ? "" : "off";
+  document.getElementById("pumpBadge").textContent =
+    pumpOn ? "กำลังทำงาน" : "พร้อมทำงาน";
+  updateTime();
+}
+
+// Demo sensor changes so the page looks alive.
+setInterval(()=>{
+  const t = 28.5 + (Math.random()-.5)*0.5;
+  const l = Math.max(0, Math.min(100, 65 + (Math.random()-.5)*4));
+  const p = 7.12 + (Math.random()-.5)*0.12;
+  document.getElementById("temp").textContent=t.toFixed(2);
+  document.getElementById("level").textContent=l.toFixed(0);
+  document.getElementById("ph").textContent=p.toFixed(2);
+  updateTime();
+},2000);
+updateTime();
+</script>
+</body>
+</html>
