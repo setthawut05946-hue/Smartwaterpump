@@ -64,7 +64,7 @@ let pumpOn=false;
 
 function badge(id,text,cls){const e=document.getElementById(id);e.textContent=text;e.className="badge "+cls}
 function updateTime(v){document.getElementById("updated").textContent=v&&Number(v)>0?new Date(Number(v)).toLocaleString("th-TH"):new Date().toLocaleTimeString("th-TH")}
-function levelStatus(v){if(v<=30)badge("levelStatus","LOW","low");else if(v>=80)badge("levelStatus","HIGH","high");else badge("levelStatus","NORMAL","normal")}
+function levelStatus(v){if(v>=30)badge("levelStatus","LOW","low");else if(v<=100)badge("levelStatus","HIGH","high");else badge("levelStatus","NORMAL","normal")}
 function phStatus(v){if(v<6.5)badge("phStatus","ACIDIC","acidic");else if(v>8.5)badge("phStatus","ALKALINE","alkaline");else badge("phStatus","NORMAL","normal")}
 function pumpUI(v){pumpOn=Boolean(v);document.getElementById("pump").textContent=pumpOn?"ON":"OFF";document.getElementById("pumpBtn").textContent=pumpOn?"สั่งปิดปั๊ม":"สั่งเปิดปั๊ม";document.getElementById("pumpBtn").className=pumpOn?"":"off";badge("pumpBadge",pumpOn?"กำลังทำงาน":"พร้อมทำงาน",pumpOn?"high":"normal")}
 
