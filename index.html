@@ -1,87 +1,928 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Water Quality Monitor</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,"Noto Sans Thai",sans-serif;background:#f4f7fb;color:#172033}
-.container{max-width:1100px;margin:auto;padding:22px}
-header{background:linear-gradient(135deg,#0b7285,#1971c2);color:white;border-radius:22px;padding:26px;margin-bottom:20px;box-shadow:0 10px 25px #0001}
-header h1{margin:0 0 7px;font-size:28px} header p{margin:0;opacity:.9}
-.status{display:inline-flex;align-items:center;gap:8px;background:#ffffff22;padding:8px 12px;border-radius:999px;margin-top:15px;font-size:14px}
-.dot{width:9px;height:9px;border-radius:50%;background:#69db7c}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.card{background:white;border-radius:18px;padding:20px;box-shadow:0 6px 18px #0000000b}
-.label{font-size:14px;color:#687386;margin-bottom:10px}.value{font-size:32px;font-weight:700}.unit{font-size:15px;color:#687386}
-.badge{display:inline-block;margin-top:12px;padding:6px 10px;border-radius:999px;font-size:13px;font-weight:700}
-.normal{background:#d3f9d8;color:#2b8a3e}.low,.acidic{background:#fff3bf;color:#a07900}.high,.alkaline,.error{background:#ffe3e3;color:#c92a2a}
-.section{margin-top:20px}.panel{background:white;border-radius:18px;padding:20px;box-shadow:0 6px 18px #0000000b}
-.panel h2{margin:0 0 15px;font-size:19px}.row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid #edf0f5}.row:last-child{border-bottom:0}
-.pump{font-size:24px;font-weight:700}button{border:0;border-radius:12px;padding:11px 16px;font-weight:700;cursor:pointer;background:#1971c2;color:white}button.off{background:#868e96}
-.note{margin-top:18px;font-size:13px;color:#687386;line-height:1.6}footer{text-align:center;color:#8b95a7;font-size:12px;margin:22px}
-@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:500px){.container{padding:12px}.grid{grid-template-columns:1fr}header h1{font-size:23px}.value{font-size:29px}}
-</style>
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Water Quality Monitor</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f3f8fc;
+      color: #17324d;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .connection {
+      text-align: center;
+      padding: 12px;
+      margin-bottom: 20px;
+      background: white;
+      border-radius: 12px;
+      font-weight: bold;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(200px, 1fr)
+      );
+
+      gap: 15px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+
+      box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .value {
+      font-size: 36px;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+
+    .unit {
+      font-size: 16px;
+      color: #666;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+
+    .low {
+      background: #ffe0e0;
+      color: #b00020;
+    }
+
+    .normal {
+      background: #e0f5e8;
+      color: #16723a;
+    }
+
+    .high {
+      background: #fff0cc;
+      color: #9a6200;
+    }
+
+    .pump-on {
+      background: #dff7e5;
+      color: #08752b;
+    }
+
+    .pump-off {
+      background: #eeeeee;
+      color: #555555;
+    }
+
+    .auto-card {
+      margin-top: 20px;
+    }
+
+    .auto-card h2 {
+      color: #17324d;
+    }
+
+    .rule {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+
+      padding: 12px 20px;
+
+      font-size: 16px;
+      font-weight: bold;
+
+      cursor: pointer;
+
+      margin: 5px;
+    }
+
+    .btn-on {
+      background: #28a745;
+      color: white;
+    }
+
+    .btn-off {
+      background: #dc3545;
+      color: white;
+    }
+
+    button:hover {
+      opacity: 0.85;
+    }
+
+    .updated {
+      margin-top: 20px;
+      text-align: center;
+      padding: 12px;
+      background: white;
+      border-radius: 12px;
+    }
+
+    .error {
+      color: #b00020;
+    }
+
+  </style>
+
 </head>
+
+
 <body>
+
 <div class="container">
-<header><h1>💧 Water Quality Monitor</h1><p>ระบบตรวจวัดและจัดการคุณภาพน้ำ</p>
-<div class="status"><span class="dot"></span><span id="connection">กำลังเชื่อมต่อ Firebase...</span></div></header>
-<div class="grid">
-<div class="card"><div class="label">🌡 อุณหภูมิน้ำ</div><div class="value"><span id="temp">--</span> <span class="unit">°C</span></div><span id="tempStatus" class="badge normal">รอข้อมูล</span></div>
-<div class="card"><div class="label">💧 ระดับน้ำ</div><div class="value"><span id="level">--</span> <span class="unit">%</span></div><span id="levelStatus" class="badge normal">รอข้อมูล</span></div>
-<div class="card"><div class="label">🧪 ค่า pH</div><div class="value"><span id="ph">--</span></div><span id="phStatus" class="badge normal">รอข้อมูล</span></div>
-<div class="card"><div class="label">⚙️ ปั๊มน้ำ</div><div class="pump" id="pump">--</div><span id="pumpBadge" class="badge normal">รอข้อมูล</span></div>
+
+  <h1>💧 Water Quality Monitor</h1>
+
+
+  <!-- Firebase Connection Status -->
+
+  <div
+    id="connection"
+    class="connection"
+  >
+    กำลังเชื่อมต่อ Firebase...
+  </div>
+
+
+  <!-- Sensor Cards -->
+
+  <div class="grid">
+
+
+    <!-- Temperature -->
+
+    <div class="card">
+
+      <h2>🌡️ อุณหภูมิน้ำ</h2>
+
+      <div
+        id="temperature"
+        class="value"
+      >
+        --
+      </div>
+
+      <div class="unit">
+        °C
+      </div>
+
+    </div>
+
+
+    <!-- Water Level -->
+
+    <div class="card">
+
+      <h2>💧 ระดับน้ำ</h2>
+
+      <div
+        id="waterLevel"
+        class="value"
+      >
+        --
+      </div>
+
+      <div class="unit">
+        %
+      </div>
+
+      <div
+        id="levelStatus"
+        class="status"
+      >
+        --
+      </div>
+
+    </div>
+
+
+    <!-- pH -->
+
+    <div class="card">
+
+      <h2>🧪 ค่า pH</h2>
+
+      <div
+        id="ph"
+        class="value"
+      >
+        --
+      </div>
+
+      <div
+        id="phStatus"
+        class="status"
+      >
+        --
+      </div>
+
+    </div>
+
+
+    <!-- Pump -->
+
+    <div class="card">
+
+      <h2>⚙️ ปั๊มน้ำ</h2>
+
+      <div
+        id="pump"
+        class="value"
+      >
+        --
+      </div>
+
+      <div
+        id="pumpStatus"
+        class="status"
+      >
+        --
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Auto Pump -->
+
+  <div class="card auto-card">
+
+    <h2>🔄 ระบบควบคุมปั๊มอัตโนมัติ</h2>
+
+    <p class="rule">
+      💧 ระดับน้ำ ≤ 30% → 🔴 <b>Pump OFF</b>
+    </p>
+
+    <p class="rule">
+      💧 ระดับน้ำ &gt; 30% → 🟢 <b>Pump ON</b>
+    </p>
+
+
+    <hr>
+
+
+    <h3>
+      ควบคุมปั๊มด้วยตนเอง
+    </h3>
+
+    <button
+      class="btn-on"
+      onclick="setPump(true)"
+    >
+      🟢 สั่งเปิดปั๊ม
+    </button>
+
+    <button
+      class="btn-off"
+      onclick="setPump(false)"
+    >
+      🔴 สั่งปิดปั๊ม
+    </button>
+
+  </div>
+
+
+  <!-- Last Updated -->
+
+  <div class="updated">
+
+    อัปเดตล่าสุด:
+    <span id="updated">
+      --
+    </span>
+
+  </div>
+
 </div>
-<div class="section"><div class="panel"><h2>📊 สถานะระบบ</h2>
-<div class="row"><span>การเชื่อมต่อ Arduino</span><strong id="arduino">รอ Arduino</strong></div>
-<div class="row"><span>ESP8266 / Wi-Fi</span><strong id="wifi">รอข้อมูลจากระบบ</strong></div>
-<div class="row"><span>อัปเดตล่าสุด</span><strong id="updated">--:--:--</strong></div>
-<div class="row"><span>โหมดปั๊ม</span><strong>อัตโนมัติ</strong></div></div></div>
-<div class="section"><div class="panel"><h2>🎛 ทดสอบการเชื่อมต่อ</h2>
-<button id="pumpBtn" onclick="togglePump()">สั่งเปิดปั๊ม</button>
-<div class="note">เว็บไซต์นี้เชื่อมต่อกับ Firebase Realtime Database แล้ว ข้อมูล Temperature, Water Level, pH และ Pump จะอ่านจาก Firebase แบบ Real-time ปุ่มด้านบนใช้สำหรับทดสอบการเขียนค่า Pump ใน Firebase เท่านั้น</div>
-</div></div>
-<footer>Water Quality Monitoring System • Arduino Mega 2560 + ESP8266</footer>
-</div>
+
+
+<!-- Firebase -->
+
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey:"AIzaSyBg1JRPtAa2E5ah1UJGlHTTn3CJrVPUjIs",
-  authDomain:"smartwaterpump2.firebaseapp.com",
-  databaseURL:"https://smartwaterpump2-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId:"smartwaterpump2",
-  storageBucket:"smartwaterpump2.firebasestorage.app",
-  messagingSenderId:"118240836212",
-  appId:"1:118240836212:web:b1a7c7ecd40d2ca7306f21",
-  measurementId:"G-EKF88BZE3T"
-};
-const app=initializeApp(firebaseConfig), db=getDatabase(app), dataRef=ref(db);
-let pumpOn=false;
 
-function badge(id,text,cls){const e=document.getElementById(id);e.textContent=text;e.className="badge "+cls}
-function updateTime(v){document.getElementById("updated").textContent=v&&Number(v)>0?new Date(Number(v)).toLocaleString("th-TH"):new Date().toLocaleTimeString("th-TH")}
-function levelStatus(v){if(v>=30)badge("levelStatus","LOW","low");else if(v>=80)badge("levelStatus","HIGH","high");else badge("levelStatus","NORMAL","normal")}
-function phStatus(v){if(v<6.5)badge("phStatus","ACIDIC","acidic");else if(v>8.5)badge("phStatus","ALKALINE","alkaline");else badge("phStatus","NORMAL","normal")}
-function pumpUI(v){pumpOn=Boolean(v);document.getElementById("pump").textContent=pumpOn?"ON":"OFF";document.getElementById("pumpBtn").textContent=pumpOn?"สั่งปิดปั๊ม":"สั่งเปิดปั๊ม";document.getElementById("pumpBtn").className=pumpOn?"":"off";badge("pumpBadge",pumpOn?"กำลังทำงาน":"พร้อมทำงาน",pumpOn?"high":"normal")}
+  // ========================================
+  // Firebase Libraries
+  // ========================================
 
-onValue(dataRef,s=>{
- const d=s.val();
- if(!d){document.getElementById("connection").textContent="Firebase เชื่อมต่อแล้ว แต่ยังไม่มีข้อมูล";return}
- document.getElementById("connection").textContent="Firebase เชื่อมต่อแล้ว";
- document.getElementById("arduino").textContent="รอ Arduino";
- document.getElementById("wifi").textContent="เชื่อมต่อ Firebase";
- if(typeof d.temperature==="number"){document.getElementById("temp").textContent=d.temperature.toFixed(2);badge("tempStatus","ข้อมูลปกติ","normal")}else{document.getElementById("temp").textContent="--";badge("tempStatus","Sensor Error","error")}
- if(typeof d.waterLevel==="number"){document.getElementById("level").textContent=d.waterLevel.toFixed(0);levelStatus(d.waterLevel)}else{document.getElementById("level").textContent="--";badge("levelStatus","ERROR","error")}
- if(typeof d.ph==="number"){document.getElementById("ph").textContent=d.ph.toFixed(2);phStatus(d.ph)}else{document.getElementById("ph").textContent="--";badge("phStatus","ERROR","error")}
- if(typeof d.pump==="boolean")pumpUI(d.pump);else{document.getElementById("pump").textContent="--";badge("pumpBadge","ERROR","error")}
- updateTime(d.updated);
-},e=>{document.getElementById("connection").textContent="Firebase เชื่อมต่อไม่ได้";console.error(e)});
+  import {
+    initializeApp
+  }
+  from
+  "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 
-window.togglePump=async()=>{try{await set(ref(db,"pump"),!pumpOn);await set(ref(db,"updated"),Date.now())}catch(e){alert("ไม่สามารถเขียนข้อมูล Pump ไป Firebase ได้");console.error(e)}};
+
+  import {
+    getDatabase,
+    ref,
+    onValue,
+    set
+  }
+  from
+  "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+
+
+  // ========================================
+  // Firebase Configuration
+  // ========================================
+
+  const firebaseConfig = {
+
+    apiKey:
+      "AIzaSyBg1JRPtAa2E5ah1UJGlHTTn3CJrVPUjIs",
+
+    authDomain:
+      "smartwaterpump2.firebaseapp.com",
+
+    databaseURL:
+      "https://smartwaterpump2-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+    projectId:
+      "smartwaterpump2",
+
+    storageBucket:
+      "smartwaterpump2.firebasestorage.app",
+
+    messagingSenderId:
+      "118240836212",
+
+    appId:
+      "1:118240836212:web:b1a7c7ecd40d2ca7306f21",
+
+    measurementId:
+      "G-EKF88BZE3T"
+
+  };
+
+
+  // ========================================
+  // Start Firebase
+  // ========================================
+
+  const app =
+    initializeApp(firebaseConfig);
+
+
+  const db =
+    getDatabase(app);
+
+
+  // Firebase Root
+
+  const rootRef =
+    ref(db);
+
+
+  // ========================================
+  // Auto Pump Function
+  // ========================================
+
+  async function autoPump(
+    waterLevel,
+    currentPump
+  ) {
+
+    // ตรวจสอบค่าระดับน้ำ
+
+    if (
+      !Number.isFinite(waterLevel)
+    ) {
+
+      console.log(
+        "Water Level Error"
+      );
+
+      return;
+    }
+
+
+    // ======================================
+    // AUTO PUMP LOGIC
+    // ======================================
+
+    let desiredPump;
+
+
+    if (waterLevel <= 30) {
+
+      // ระดับน้ำ <= 30%
+      // Pump OFF
+
+      desiredPump = false;
+
+      console.log(
+        "Water Level <= 30% → Pump OFF"
+      );
+
+    }
+
+    else {
+
+      // ระดับน้ำ > 30%
+      // Pump ON
+
+      desiredPump = true;
+
+      console.log(
+        "Water Level > 30% → Pump ON"
+      );
+
+    }
+
+
+    // ======================================
+    // ตรวจสอบว่าต้องเปลี่ยนสถานะหรือไม่
+    // ======================================
+
+    if (
+      currentPump === desiredPump
+    ) {
+
+      return;
+
+    }
+
+
+    // ======================================
+    // ส่งคำสั่งไป Firebase
+    // ======================================
+
+    try {
+
+      await set(
+        ref(db, "pump"),
+        desiredPump
+      );
+
+
+      await set(
+        ref(db, "updated"),
+        Date.now()
+      );
+
+
+      console.log(
+        "Pump =",
+        desiredPump
+          ? "ON"
+          : "OFF"
+      );
+
+    }
+
+    catch (error) {
+
+      console.error(
+        "Auto Pump Error:",
+        error
+      );
+
+    }
+
+  }
+
+
+  // ========================================
+  // Water Level Status
+  // ========================================
+
+  function updateLevelStatus(
+    level
+  ) {
+
+    const element =
+      document.getElementById(
+        "levelStatus"
+      );
+
+
+    if (level <= 30) {
+
+      element.textContent =
+        "LOW";
+
+      element.className =
+        "status low";
+
+    }
+
+    else {
+
+      element.textContent =
+        "NORMAL";
+
+      element.className =
+        "status normal";
+
+    }
+
+  }
+
+
+  // ========================================
+  // pH Status
+  // ========================================
+
+  function updatePhStatus(
+    ph
+  ) {
+
+    const element =
+      document.getElementById(
+        "phStatus"
+      );
+
+
+    if (ph < 6.5) {
+
+      element.textContent =
+        "ACIDIC";
+
+      element.className =
+        "status low";
+
+    }
+
+    else if (ph > 8.5) {
+
+      element.textContent =
+        "ALKALINE";
+
+      element.className =
+        "status high";
+
+    }
+
+    else {
+
+      element.textContent =
+        "NORMAL";
+
+      element.className =
+        "status normal";
+
+    }
+
+  }
+
+
+  // ========================================
+  // Firebase Real-Time Listener
+  // ========================================
+
+  onValue(
+    rootRef,
+
+    (snapshot) => {
+
+
+      const data =
+        snapshot.val() || {};
+
+
+      // ====================================
+      // Read Firebase Values
+      // ====================================
+
+      const temperature =
+        Number(
+          data.temperature
+        );
+
+
+      const waterLevel =
+        Number(
+          data.waterLevel
+        );
+
+
+      const ph =
+        Number(
+          data.ph
+        );
+
+
+      const pump =
+        Boolean(
+          data.pump
+        );
+
+
+      // ====================================
+      // Temperature Display
+      // ====================================
+
+      document.getElementById(
+        "temperature"
+      ).textContent =
+
+        Number.isFinite(
+          temperature
+        )
+
+        ? temperature.toFixed(2)
+
+        : "--";
+
+
+      // ====================================
+      // Water Level Display
+      // ====================================
+
+      document.getElementById(
+        "waterLevel"
+      ).textContent =
+
+        Number.isFinite(
+          waterLevel
+        )
+
+        ? waterLevel.toFixed(0)
+
+        : "--";
+
+
+      // ====================================
+      // pH Display
+      // ====================================
+
+      document.getElementById(
+        "ph"
+      ).textContent =
+
+        Number.isFinite(
+          ph
+        )
+
+        ? ph.toFixed(2)
+
+        : "--";
+
+
+      // ====================================
+      // Water Level Status
+      // ====================================
+
+      if (
+        Number.isFinite(
+          waterLevel
+        )
+      ) {
+
+        updateLevelStatus(
+          waterLevel
+        );
+
+      }
+
+
+      // ====================================
+      // pH Status
+      // ====================================
+
+      if (
+        Number.isFinite(
+          ph
+        )
+      ) {
+
+        updatePhStatus(
+          ph
+        );
+
+      }
+
+
+      // ====================================
+      // Pump Display
+      // ====================================
+
+      const pumpElement =
+        document.getElementById(
+          "pump"
+        );
+
+
+      const pumpStatusElement =
+        document.getElementById(
+          "pumpStatus"
+        );
+
+
+      if (pump) {
+
+        pumpElement.textContent =
+          "ON";
+
+        pumpStatusElement.textContent =
+          "กำลังทำงาน";
+
+        pumpStatusElement.className =
+          "status pump-on";
+
+      }
+
+      else {
+
+        pumpElement.textContent =
+          "OFF";
+
+        pumpStatusElement.textContent =
+          "หยุดทำงาน";
+
+        pumpStatusElement.className =
+          "status pump-off";
+
+      }
+
+
+      // ====================================
+      // Firebase Connection
+      // ====================================
+
+      const connection =
+        document.getElementById(
+          "connection"
+        );
+
+
+      connection.textContent =
+        "Firebase เชื่อมต่อแล้ว";
+
+
+      connection.style.color =
+        "#08752b";
+
+
+      // ====================================
+      // Updated Time
+      // ====================================
+
+      const updated =
+        document.getElementById(
+          "updated"
+        );
+
+
+      if (data.updated) {
+
+        updated.textContent =
+          new Date(
+            data.updated
+          ).toLocaleString(
+            "th-TH"
+          );
+
+      }
+
+      else {
+
+        updated.textContent =
+          "--";
+
+      }
+
+
+      // ====================================
+      // AUTO PUMP
+      // ====================================
+
+      if (
+        Number.isFinite(
+          waterLevel
+        )
+      ) {
+
+        autoPump(
+          waterLevel,
+          pump
+        );
+
+      }
+
+    },
+
+
+    // ======================================
+    // Firebase Error
+    // ======================================
+
+    (error) => {
+
+      console.error(
+        error
+      );
+
+
+      const connection =
+        document.getElementById(
+          "connection"
+        );
+
+
+      connection.textContent =
+        "Firebase เชื่อมต่อผิดพลาด";
+
+
+      connection.style.color =
+        "#b00020";
+
+    }
+
+  );
+
+
+  // ========================================
+  // Manual Pump Control
+  // ========================================
+
+  window.setPump =
+    async function(state) {
+
+      try {
+
+        await set(
+          ref(db, "pump"),
+          state
+        );
+
+
+        await set(
+          ref(db, "updated"),
+          Date.now()
+        );
+
+
+        console.log(
+          "Manual Pump:",
+          state
+            ? "ON"
+            : "OFF"
+        );
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Manual Pump Error:",
+          error
+        );
+
+
+        alert(
+          "ไม่สามารถสั่งปั๊มได้"
+        );
+
+      }
+
+    };
+
+
 </script>
+
 </body>
+
 </html>
